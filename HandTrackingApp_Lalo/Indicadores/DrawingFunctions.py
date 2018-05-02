@@ -6,7 +6,7 @@ def UsedSpace(scr):
 
     gray = cv2.cvtColor(scr, cv2.COLOR_BGR2GRAY)
 
-    # noise removal
+    # noise removal Erosion then Dilation
     kernel = np.ones((3, 3), np.uint8)
     gray_filtered = cv2.morphologyEx(gray, cv2.MORPH_OPEN, kernel, iterations=1)
 
@@ -43,9 +43,10 @@ def UsedSpace(scr):
 
 
     nb_components, output, stats, centroids = cv2.connectedComponentsWithStats(eroded, connectivity=8)
-    sizes = stats[1:, -1]
+
+    sizes = stats[0:, -1]
     nb_components = nb_components - 1
-    min_size = 150
+    min_size = 250
 
     area_filtered = np.zeros(output.shape)
     for i in range(0, nb_components):
@@ -54,10 +55,10 @@ def UsedSpace(scr):
 
     output = area_filtered
 
-
     # # Display images.
     cv2.imshow("Original", scr)
     cv2.imshow("Gray Filtered", gray_filtered)
+    cv2.imshow("Adaptive Threshold", thresh)
     cv2.imshow("Median Filter Threshold", thresh_median)
     cv2.imshow("Erotion and Dilatation", eroded)
     cv2.imshow("Used Area", output)

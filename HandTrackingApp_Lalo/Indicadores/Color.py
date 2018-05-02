@@ -6,7 +6,7 @@ from matplotlib import pyplot as plt
 from DrawingFunctions import *
 
 # scr = cv2.imread('../Images/kd1.png')
-scr = cv2.imread('../Images/kd3.jpg')
+scr = cv2.imread('../Images/kd2.jpg')
 
 
 # gray = cv2.cvtColor(scr, cv2.COLOR_BGR2GRAY)
