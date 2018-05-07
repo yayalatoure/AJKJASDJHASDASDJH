@@ -1,6 +1,6 @@
 import numpy as np
 import cv2
-
+from matplotlib import pyplot as plt
 
 def UsedSpace(scr):
 
@@ -53,14 +53,14 @@ def UsedSpace(scr):
         if sizes[i] >= min_size:
             area_filtered[output == i + 1] = 255
 
-    output = area_filtered
+    output = np.uint8(area_filtered)
 
-    # # Display images.
-    cv2.imshow("Original", scr)
-    cv2.imshow("Gray Filtered", gray_filtered)
-    cv2.imshow("Adaptive Threshold", thresh)
-    cv2.imshow("Median Filter Threshold", thresh_median)
-    cv2.imshow("Erotion and Dilatation", eroded)
+    # # # Display images.
+    # cv2.imshow("Original", scr)
+    # cv2.imshow("Gray Filtered", gray_filtered)
+    # cv2.imshow("Adaptive Threshold", thresh)
+    # cv2.imshow("Median Filter Threshold", thresh_median)
+    # cv2.imshow("Erotion and Dilatation", eroded)
     cv2.imshow("Used Area", output)
 
 
@@ -68,6 +68,31 @@ def UsedSpace(scr):
     usedPixels = np.sum(np.sum(output))/255
     area = (usedPixels/(h*w))*100
 
-    print 'Area Utilizada: %.2f' % area
+    print '\nArea Utilizada: %.2f' % area
 
     return output, area
+
+def MassCenter(scr, area):
+
+    nb_components, output, stats, centroids = cv2.connectedComponentsWithStats(area, connectivity=8)
+
+    # print centroids[1:, 0]
+    # print stats[0:, 4]
+    # print np.dot(centroids[0:, 0], stats[0:, 4])/sum(stats[0:, 4])
+    # cm_avX = int(np.dot(centroids[1:, 0], stats[1:, 4])/sum(stats[1:, 4]))
+    # cm_avY = int(np.dot(centroids[1:, 1], stats[1:, 4])/sum(stats[1:, 4]))
+
+    cm_avX = int(np.floor(np.average(centroids[1:, 0], weights=stats[1:, 4])))
+    cm_avY = int(np.floor(np.average(centroids[1:, 1], weights=stats[1:, 4])))
+
+    print('\nCentro de Masa Total: (' + repr(cm_avX) + ', ' + repr(cm_avY) + ')' )
+
+    for i in range(0, nb_components-1):
+        cv2.circle(scr, (int(centroids[i+1, 0]), int(centroids[i+1, 1])), 8, (255, 0, 0), -1)
+
+    cv2.circle(scr, (cm_avX, cm_avY), 4, (0, 0, 255), -1)
+
+    cv2.imshow("CM Total", scr)
+
+
+    return (cm_avX, cm_avY)
