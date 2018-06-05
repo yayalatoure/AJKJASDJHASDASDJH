@@ -1,13 +1,19 @@
 
 from DrawingFunctions import *
 
-# scr = cv2.imread('../Images/kd1.png')
-scr = cv2.imread('../Images/kd4.jpg')
+# ch = 's'
 
-out, area = UsedSpace(scr)
+# while (ch != 'q' and ch != 'Q'):
 
-centroids = MassCenter(scr, out)
+    # Recorre carpeta completa y anda revisando
+src = cv2.imread('/home/lalo/Dropbox/Proyecto_Dibujos/Dibujos/Test 2/1 MEDIO - 13.jpg')
+
+out, area = UsedSpace(src)
+# centroids = MassCenter(src, out)
 
 cv2.waitKey(0)
+
+
+
 
 cv2.destroyAllWindows()
